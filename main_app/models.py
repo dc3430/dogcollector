@@ -1,6 +1,8 @@
 from django.db import models
 # Import the reverse function
 from django.urls import reverse
+# Import the date function 
+from datetime import date
 
 # A tuple of 2-tuples, MEALS is like a constant dont change
 MEALS = (
@@ -9,6 +11,15 @@ MEALS = (
     ('D', 'Dinner')
 )
 
+class Toy(models.Model):
+    name = models.CharField(max_length=50)
+    color = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+    
+    def get_absolute_url(self):
+        return reverse('toys_detail', kwargs={'pk': self.id})
 
 # Create your models here.
 class Dog(models.Model):
@@ -16,18 +27,25 @@ class Dog(models.Model):
     breed = models.CharField(max_length=100)
     description = models.TextField(max_length=250)
     age = models.IntegerField()
+    # Add the M:M relationship
+    toys = models.ManyToManyField(Toy)
+
 
     # new code below
     def __str__(self):
-        return f'{self.name} ({self.id})'
+        return self.name
 
     # Add new method
     def get_absolute_url(self):
         return reverse('detail', kwargs={'dog_id': self.id})
 
+    # Feeding method
+    def fed_for_today(self):
+        return self.feeding_set.filter(date=date.today()).count() >= len(MEALS)
+
 # Add new Feeding model below Cat model
 class Feeding(models.Model):
-    date = models.DateField()
+    date = models.DateField('feeding date')
     meal = models.CharField(
         max_length=1,
         choices=MEALS, # add the 'choices' field option
@@ -42,3 +60,4 @@ class Feeding(models.Model):
     # change the default sort
     class Meta:
         ordering = ['-date']
+
