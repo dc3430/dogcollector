@@ -48,6 +48,7 @@ class DogCreate(CreateView):
     model = Dog
     fields = ['name', 'breed', 'description', 'age']
 
+
 # This inherited method is called when a
 # valid dog form is being submitted
 def form_valid(self, form):
@@ -72,6 +73,7 @@ def home(request):
 def about(request):
     return render(request, 'about.html')
 # Add new view
+
 @login_required
 def dogs_index(request):
     dogs = Dog.objects.filter(user=request.user)
@@ -108,6 +110,7 @@ def add_feeding(request, dog_id):
     return redirect('detail', dog_id=dog_id)
 
 
+
 @login_required
 def add_photo(request, dog_id):
     # photo-file will be the "name" attribute on the <input type="file">
@@ -140,20 +143,21 @@ def unassoc_toy(request, dog_id, toy_id):
   return redirect('detail', dog_id=dog_id)
 
 class ToyList(ListView):
-  model = Toy
+    model = Toy
 
 class ToyDetail(DetailView):
-  model = Toy
+    model = Toy
 
 class ToyCreate(CreateView):
-  model = Toy
-  fields = '__all__'
+    model = Toy
+    fields = '__al__'
 
 class ToyUpdate(UpdateView):
-  model = Toy
-  fields = ['name', 'color']
+    model = Toy
+    fields = ['name', 'color']
 
 class ToyDelete(DeleteView):
-  model = Toy
-  success_url = '/toys/'
+    model = Toy
+    success_url = '/toys'
+
 

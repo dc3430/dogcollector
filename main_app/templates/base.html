@@ -7,12 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Dog Collector</title>
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </head>
-<body>
-  <header class="navbar-fixed">
+<body class="mbody lime accent-4">
+  <header class="navbar">
     <nav>
       <div class="nav-wrapper light-blue">
         <ul>
@@ -33,8 +35,18 @@
             <li><a href="{% url 'login' %}">Log In</a></li>
           {% endif %}
         </ul>
+        </div>
       </div>
     </nav>
+
+    <ul class="sidenav" id="mobile-links">
+        <li><a href="{% url 'toys_create' %}">Add a Toy</a></li>
+        <li><a href="{% url 'toys_index' %}">View All Toys</a></li>
+        <li><a href="{% url 'dogs_create' %}">Add a Dog</a></li>
+        <li><a href="{% url 'index' %}">View All My Dogs</a></li>
+       
+    </ul>
+
   </header>
   <main class="container">
     {% block content %}
@@ -43,5 +55,16 @@
   <footer class="page-footer light-blue">
     <div class="right">All Rights Reserved, &copy; 2019 Dog Collector &nbsp;</div>
   </footer>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    $(document).ready(function() {
+        $('.sidenav').sidenav();
+    });
+  </script>
+
+
 </body>
 </html>
+
+
