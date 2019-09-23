@@ -1,6 +1,8 @@
 from django.db import models
 # Import the reverse function
 from django.urls import reverse
+# add this import
+from datetime import date
 
 # A tuple of 2-tuples, MEALS is like a constant dont change
 MEALS = (
@@ -8,6 +10,8 @@ MEALS = (
     ('L', 'Lunch'),
     ('D', 'Dinner')
 )
+
+
 
 
 # Create your models here.
@@ -24,6 +28,10 @@ class Dog(models.Model):
     # Add new method
     def get_absolute_url(self):
         return reverse('detail', kwargs={'dog_id': self.id})
+
+      # add this new method
+    def fed_for_today(self):
+        return self.feeding_set.filter(date=date.today()).count() >= len(MEALS)
 
 # Add new Feeding model below Cat model
 class Feeding(models.Model):
