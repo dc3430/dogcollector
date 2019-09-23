@@ -17,25 +17,22 @@
   <header class="navbar">
     <nav>
       <div class="nav-wrapper light-blue">
-        <div class="container">
-          <ul>
-            <li><a href="/" class="brand-logo">&nbsp;&nbsp;Dog Collector</a></li>
-            <a href="#" class="sidenav-trigger" data-target="mobile-links">
-              <i class="material-icons">menu</i>
-            </a>
-          </ul>
-        <ul class="right hide-on-med-and-down">
+        <ul>
+          <li><a href="/" class="left brand-logo">&nbsp;&nbsp;DogCollector</a></li>
+        </ul>
+        <ul class="right">
+          <!-- changes below -->
           <li><a href="{% url 'about' %}">About</a></li>
           {% if user.is_authenticated %}
             <li><a href="{% url 'toys_create' %}">Add a Toy</a></li>
             <li><a href="{% url 'toys_index' %}">View All Toys</a></li>
             <li><a href="{% url 'dogs_create' %}">Add a Dog</a></li>
             <li><a href="{% url 'index' %}">View All My Dogs</a></li>
-     
+            <li><a href="{% url 'logout' %}">Log Out</a></li>
           {% else %}
-
-            </a></li>
-            <li><span class="badge white-text pink new">5</span></li>
+            <!-- New link below -->
+            <li><a href="{% url 'signup' %}">Sign Up</a></li>
+            <li><a href="{% url 'login' %}">Log In</a></li>
           {% endif %}
         </ul>
         </div>
@@ -55,8 +52,6 @@
     {% block content %}
     {% endblock %}
   </main>
-
-  <br>
   <footer class="page-footer light-blue">
     <div class="right">All Rights Reserved, &copy; 2019 Dog Collector &nbsp;</div>
   </footer>
