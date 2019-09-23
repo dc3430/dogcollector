@@ -22,11 +22,31 @@ from .forms import FeedingForm
 S3_BASE_URL = 'https://s3-us-west-1.amazonaws.com/'
 BUCKET = 'dogcollector-dc'
 
+def signup(request):
+  error_message = ''
+  if request.method == 'POST':
+    # This is how to create a 'user' form object
+    # that includes the data from the browser
+    form = UserCreationForm(request.POST)
+    if form.is_valid():
+      # This will add the user to the database
+      user = form.save()
+      # This is how we log a user in via code
+      login(request, user)
+      return redirect('index')
+    else:
+      error_message = 'Invalid sign up - try again'
+  # A bad POST or a GET request, so render signup.html with an empty form
+  form = UserCreationForm()
+  context = {'form': form, 'error_message': error_message}
+  return render(request, 'registration/signup.html', context)
+
+
+
 #add Create view
 class DogCreate(CreateView):
     model = Dog
-    fields = '__all__'
-    success_url = '/dogs/'
+    fields = ['name', 'breed', 'description', 'age']
 
 # This inherited method is called when a
 # valid dog form is being submitted
@@ -36,12 +56,12 @@ def form_valid(self, form):
     # Let the CreateView do its job as usual
     return super().form_valid(form)
 
-class DogUpdate(UpdateView):
+class DogUpdate(LoginRequiredMixin, UpdateView):
     model = Dog
     # Let's disallow the renaming of a Dog by excluding the name field!
     fields = ['name', 'breed', 'description', 'age']
 
-class DogDelete(DeleteView):
+class DogDelete(LoginRequiredMixin, DeleteView):
     model = Dog
     success_url = '/dogs/'
 
@@ -58,6 +78,7 @@ def dogs_index(request):
     # You could also retrieve the logged in user's dogs like this
     # dogs = request.user.dog_set.all()
     return render(request, 'dogs/index.html', { 'dogs': dogs })
+@login_required
 # Add detail view
 def dogs_detail(request, dog_id):
     dog = Dog.objects.get(id=dog_id)
@@ -136,21 +157,3 @@ class ToyDelete(DeleteView):
   model = Toy
   success_url = '/toys/'
 
-def signup(request):
-  error_message = ''
-  if request.method == 'POST':
-    # This is how to create a 'user' form object
-    # that includes the data from the browser
-    form = UserCreationForm(request.POST)
-    if form.is_valid():
-      # This will add the user to the database
-      user = form.save()
-      # This is how we log a user in via code
-      login(request, user)
-      return redirect('index')
-    else:
-      error_message = 'Invalid sign up - try again'
-  # A bad POST or a GET request, so render signup.html with an empty form
-  form = UserCreationForm()
-  context = {'form': form, 'error_message': error_message}
-  return render(request, 'registration/signup.html', context)
