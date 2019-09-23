@@ -22,10 +22,32 @@ from .forms import FeedingForm
 S3_BASE_URL = 'https://s3-us-west-1.amazonaws.com/'
 BUCKET = 'dogcollector-dc'
 
+def signup(request):
+  error_message = ''
+  if request.method == 'POST':
+    # This is how to create a 'user' form object
+    # that includes the data from the browser
+    form = UserCreationForm(request.POST)
+    if form.is_valid():
+      # This will add the user to the database
+      user = form.save()
+      # This is how we log a user in via code
+      login(request, user)
+      return redirect('index')
+    else:
+      error_message = 'Invalid sign up - try again'
+  # A bad POST or a GET request, so render signup.html with an empty form
+  form = UserCreationForm()
+  context = {'form': form, 'error_message': error_message}
+  return render(request, 'registration/signup.html', context)
+
+
+
 #add Create view
 class DogCreate(CreateView):
     model = Dog
-    ffields = ['name', 'breed', 'description', 'age']
+    fields = ['name', 'breed', 'description', 'age']
+
 
 # This inherited method is called when a
 # valid dog form is being submitted
@@ -35,12 +57,12 @@ def form_valid(self, form):
     # Let the CreateView do its job as usual
     return super().form_valid(form)
 
-class DogUpdate(UpdateView):
+class DogUpdate(LoginRequiredMixin, UpdateView):
     model = Dog
     # Let's disallow the renaming of a Dog by excluding the name field!
     fields = ['name', 'breed', 'description', 'age']
 
-class DogDelete(DeleteView):
+class DogDelete(LoginRequiredMixin, DeleteView):
     model = Dog
     success_url = '/dogs/'
 
@@ -51,38 +73,26 @@ def home(request):
 def about(request):
     return render(request, 'about.html')
 # Add new view
-<<<<<<< HEAD
 
-
-=======
 @login_required
->>>>>>> working
 def dogs_index(request):
     dogs = Dog.objects.filter(user=request.user)
     # You could also retrieve the logged in user's dogs like this
     # dogs = request.user.dog_set.all()
     return render(request, 'dogs/index.html', { 'dogs': dogs })
+@login_required
 # Add detail view
 def dogs_detail(request, dog_id):
     dog = Dog.objects.get(id=dog_id)
-<<<<<<< HEAD
-    # Get the toys the cat doesn't have
-    toys_dog_doesnt_have = Toy.objects.exclude(id_in = dog.toys.all().values_list('id'))
-=======
     # Get the toys the dog doesn't have
     toys_dog_doesnt_have = Toy.objects.exclude(id__in = dog.toys.all().values_list('id'))
->>>>>>> working
     # instantiate FeedingForm to be rendered in the template
     feeding_form = FeedingForm()
     return render(request, 'dogs/detail.html', { 
         # include the Dog and feeding_form in the context
         'dog': dog, 'feeding_form': feeding_form,
         # Add the toys to be displayed
-<<<<<<< HEAD
-        'toys': toys_cat_doesnt_have
-=======
         'toys': toys_dog_doesnt_have
->>>>>>> working
     })
 
 # add this new function below dogs_detail
@@ -99,13 +109,7 @@ def add_feeding(request, dog_id):
       new_feeding.save()
     return redirect('detail', dog_id=dog_id)
 
-<<<<<<< HEAD
-def assoc_toy(request, dog_id, toy_id):
-    # Note that you can pass a toy's id instead of the whole object
-    Dog.objects.get(id=dog_id).toys.add(toy_id)
-    return redirect('detail', dog_id=dog_id)
 
-=======
 
 @login_required
 def add_photo(request, dog_id):
@@ -134,13 +138,11 @@ def assoc_toy(request, dog_id, toy_id):
   return redirect('detail', dog_id=dog_id)
 
 @login_required
->>>>>>> working
 def unassoc_toy(request, dog_id, toy_id):
   Dog.objects.get(id=dog_id).toys.remove(toy_id)
   return redirect('detail', dog_id=dog_id)
 
 class ToyList(ListView):
-<<<<<<< HEAD
     model = Toy
 
 class ToyDetail(DetailView):
@@ -158,40 +160,4 @@ class ToyDelete(DeleteView):
     model = Toy
     success_url = '/toys'
 
-=======
-  model = Toy
 
-class ToyDetail(DetailView):
-  model = Toy
-
-class ToyCreate(CreateView):
-  model = Toy
-  fields = '__all__'
-
-class ToyUpdate(UpdateView):
-  model = Toy
-  fields = ['name', 'color']
-
-class ToyDelete(DeleteView):
-  model = Toy
-  success_url = '/toys/'
-
-def signup(request):
-  error_message = ''
-  if request.method == 'POST':
-    # This is how to create a 'user' form object
-    # that includes the data from the browser
-    form = UserCreationForm(request.POST)
-    if form.is_valid():
-      # This will add the user to the database
-      user = form.save()
-      # This is how we log a user in via code
-      login(request, user)
-      return redirect('index')
-    else:
-      error_message = 'Invalid sign up - try again'
-  # A bad POST or a GET request, so render signup.html with an empty form
-  form = UserCreationForm()
-  context = {'form': form, 'error_message': error_message}
-  return render(request, 'registration/signup.html', context)
->>>>>>> working

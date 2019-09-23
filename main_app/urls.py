@@ -34,7 +34,6 @@ urlpatterns = [
 <<<<<<< HEAD
 =======
 
-    path('dogs/<int:dog_id>/add_photo/', views.add_photo, name='add_photo'), # new path photos
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signup', views.signup, name='signup'),
 
