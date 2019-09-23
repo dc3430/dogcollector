@@ -3,6 +3,9 @@ from django.db import models
 from django.urls import reverse
 # add this import
 from datetime import date
+# Import the User
+from django.contrib.auth.models import User
+
 
 # A tuple of 2-tuples, MEALS is like a constant dont change
 MEALS = (
@@ -20,6 +23,8 @@ class Dog(models.Model):
     breed = models.CharField(max_length=100)
     description = models.TextField(max_length=250)
     age = models.IntegerField()
+    # Add the foreign key linking to a user instance
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     # new code below
     def __str__(self):
